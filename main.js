@@ -96,6 +96,7 @@ function handleChoices() {
             addLivre();
             break;
         case "2":
+            serviceTitle("Afficher tous les livres");
             showLivres(livres);
             break;
         case "3":
@@ -135,6 +136,8 @@ function handleChoices() {
 }
 
 function addLivre() {
+    serviceTitle("Ajouter un livre");
+
     let livre = {
         isbn: prompt("    Entrer l'ISBN du livre: "),
         titre: prompt("    Entrer le titre livre: "),
@@ -177,6 +180,8 @@ function showLivres(livresArray) {
 }
 
 function sortLivresByTitle() {
+    serviceTitle("Trier les livres par titre");
+
     let choice = prompt(
         '    Taper (1) pour trier les livres "ascendant" ou taper (2) pour trier les livres "descendant": '
     );
@@ -202,6 +207,8 @@ function sortLivresByTitle() {
 }
 
 function sortLivresByDate() {
+    serviceTitle("Trier les livres par année de publication");
+
     let sortedLivres = livres.sort((a, b) => {
         if (a.annee < b.annee) {
             return -1;
@@ -216,12 +223,16 @@ function sortLivresByDate() {
 }
 
 function showAvailableLivres() {
+    serviceTitle("Afficher les livres disponibles");
+
     let array = livres.filter((livre) => livre.disponible == true);
 
     showLivres(array);
 }
 
 function searchByIsbn() {
+    serviceTitle("Rechercher un livre par ISBN");
+
     let isbn = prompt("    Rechercher un livre par ISBN: ");
 
     let array = livres.filter((livre) => livre.isbn == isbn);
@@ -230,6 +241,8 @@ function searchByIsbn() {
 }
 
 function addAbonne() {
+    serviceTitle("Ajouter un abonné");
+
     let abonne = {
         id: abonnes.length + 1,
         nom: prompt("    Entrer le nom du abonne: "),
@@ -246,6 +259,8 @@ function addAbonne() {
 }
 
 function showAbonnes(abonneArray) {
+    showAbonnes("Afficher tous les abonnés");
+
     if (abonneArray.length > 0) {
         console.table(abonnes);
     } else {
@@ -256,28 +271,27 @@ function showAbonnes(abonneArray) {
     startProgram();
 }
 
+function abonneCheck() {
+    let id = prompt("    Entrer l'ID du abonne: ");
+
+    return abonnes.find((abonne) => abonne.id == id);
+}
+
 function borrowLivre() {
-    let abonneID = prompt("    Entrer l'ID du abonne: ");
+    showAbonnes("Enregistrer un emprunt");
 
-    let abonneCheck = false;
+    let abonne = abonneCheck();
 
-    for (let abonne of abonnes) {
-        if (abonne.id == abonneID) abonneCheck = true;
-    }
-
-    if (abonneCheck) {
+    if (abonne != undefined) {
         let isbn = prompt("    Entrez l'ISBN du livre: ");
 
         let livreCheck = false;
 
         // Set Date Settings
-        let currentDate = new Date();
-
-        let year = currentDate.getFullYear();
-        let month = currentDate.getMonth() + 1;
-        let day = currentDate.getDate();
-
-        let fullDate = `${year}-${month}-${day}`;
+        let currentDate = new Date(),
+            fullDate = `${currentDate.getFullYear()}-${
+                currentDate.getMonth() + 1
+            }-${currentDate.getDate()}`;
 
         for (let livre of livres) {
             if (livre.isbn == isbn) {
@@ -287,7 +301,7 @@ function borrowLivre() {
 
                     // Push Borrow Info
                     emprunts.push({
-                        abonneId: +abonneID,
+                        abonneId: abonne.id,
                         isbn: isbn,
                         dateEmprunt: fullDate,
                     });
@@ -317,15 +331,11 @@ function borrowLivre() {
 }
 
 function returnBook() {
-    let abonneId = prompt("    Entrer l'ID du abonne: ");
+    showAbonnes("Enregistrer un retour");
 
-    // Check if The Abonne is Registered
-    let abonneCheck = false;
-    for (let abonne of abonnes) {
-        if (abonne.id == abonneId) abonneCheck = true;
-    }
+    let abonne = abonneCheck();
 
-    if (abonneCheck) {
+    if (abonne != undefined) {
         let isbn = prompt("    Entrez l'ISBN du livre: ");
 
         let borrowCheck = false;
@@ -359,19 +369,15 @@ function returnBook() {
 }
 
 function showBorrowedLivres() {
-    let abonneId = prompt("    Entrer l'ID du abonne: ");
+    serviceTitle("Afficher les livres empruntés par un abonné donné");
 
-    let abonneCheck = false;
+    let abonne = abonneCheck();
 
-    for (let abonne of abonnes) {
-        if (abonne.id == abonneId) abonneCheck = true;
-    }
-
-    if (abonneCheck) {
+    if (abonne != undefined) {
         let borrowCheck = false;
 
         for (let emprunt of emprunts) {
-            if (emprunt.abonneId == abonneId) {
+            if (emprunt.abonneId == abonne.id) {
                 for (let emprunt of emprunts) {
                     console.log(
                         `
@@ -396,6 +402,14 @@ function showBorrowedLivres() {
 
     // Keep the Program Running
     startProgram();
+}
+
+function serviceTitle(title) {
+    // Add Empty Space
+    console.log("");
+
+    // Add the Service Title
+    console.log(`    ${title}:`);
 }
 
 // 3: Start The Program
