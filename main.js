@@ -30,7 +30,7 @@ abonnes = [{ id: 1, nom: "Dupont", prenom: "Alice", email: "alice@mail.com" }];
 
 function startProgram() {
     console.log(`
-a : Opérations sur les livres:
+a : Gestion des livres:
 b : Gestion des abonnés:
 c : Gestion des emprunts:
 0 : Quitter
@@ -60,7 +60,7 @@ c : Gestion des emprunts:
         console.log(`
     9  : Enregistrer un emprunt
     10 : Enregistrer un retour
-    11 : Afficher les livres empruntés
+    11 : Afficher les livres empruntés par un abonné donné
     12 : retour
     0  : Quitter
             `);
