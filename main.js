@@ -144,7 +144,7 @@ function showLivres(livresArray) {
                 : (livre.disponible = "Non disponible")
         );
 
-        console.table(livres);
+        console.table(livresArray);
 
         // Toggle Livres Availability to Booleans
         livresArray.map((livre) =>
@@ -214,9 +214,10 @@ function showAvailableLivres() {
 function searchByIsbn() {
     serviceTitle("Rechercher un livre par ISBN");
 
-    let isbn = prompt("    Rechercher un livre par ISBN: ");
+    let isbn = prompt("    Entrer l'ISBN du livre: ");
 
     let array = livres.filter((livre) => livre.isbn == isbn);
+    console.log(array);
 
     showLivres(array);
 }
@@ -240,7 +241,7 @@ function addAbonne() {
 }
 
 function showAbonnes(abonneArray) {
-    showAbonnes("Afficher tous les abonnés");
+    serviceTitle("Afficher tous les abonnés");
 
     if (abonneArray.length > 0) {
         console.table(abonnes);
@@ -259,7 +260,7 @@ function abonneCheck() {
 }
 
 function borrowLivre() {
-    showAbonnes("Enregistrer un emprunt");
+    serviceTitle("Enregistrer un emprunt");
 
     let abonne = abonneCheck();
 
@@ -312,7 +313,7 @@ function borrowLivre() {
 }
 
 function returnBook() {
-    showAbonnes("Enregistrer un retour");
+    serviceTitle("Enregistrer un retour");
 
     let abonne = abonneCheck();
 
@@ -390,7 +391,10 @@ function serviceTitle(title) {
     console.log("");
 
     // Add the Service Title
-    console.log(`    ${title}:`);
+    console.log(`    === ${title} ===`);
+
+    // Add Empty Space
+    console.log("");
 }
 
 // 3: Start The Program
