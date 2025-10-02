@@ -7,25 +7,6 @@ let livres = [],
     emprunts = [],
     choice;
 
-livres = [
-    {
-        isbn: "123",
-        titre: "book",
-        auteur: "Saint-Exupéry",
-        annee: 1943,
-        disponible: true,
-    },
-    {
-        isbn: "456",
-        titre: "abook",
-        auteur: "Camus",
-        annee: 1942,
-        disponible: false,
-    },
-];
-
-abonnes = [{ id: 1, nom: "Dupont", prenom: "Alice", email: "alice@mail.com" }];
-
 // 2: Start Functions
 
 function startProgram() {
