@@ -9,7 +9,6 @@ let livres = [],
 
 livres = [
     {
-        id: 1,
         isbn: "123",
         titre: "book",
         auteur: "Saint-Exupéry",
@@ -17,7 +16,6 @@ livres = [
         disponible: true,
     },
     {
-        id: 2,
         isbn: "456",
         titre: "abook",
         auteur: "Camus",
@@ -76,7 +74,7 @@ c : Gestion des emprunts:
     }
 
     // Get input
-    choice = prompt("Choisissez une optionnnnn: ");
+    choice = prompt("    Choisissez une option: ");
 
     // Handle Choices
     handleOperations();
@@ -131,14 +129,13 @@ function handleChoices() {
             startProgram();
             break;
         default:
-            console.log("Le choix n'existe pas, choisissez un autre");
+            console.log("    Le choix n'existe pas, choisissez un autre");
             startProgram();
     }
 }
 
 function addLivre() {
     let livre = {
-        id: livres.length + 1,
         isbn: prompt("    Entrer l'ISBN du livre: "),
         titre: prompt("    Entrer le titre livre: "),
         auteur: prompt("    Entrer l'auteur du livre: "),
@@ -148,7 +145,7 @@ function addLivre() {
 
     livres.push(livre);
 
-    console.log("Livre ajouté avec succès!");
+    console.log("    Livre ajouté avec succès!");
 
     // Keep the Program Running
     startProgram();
@@ -156,18 +153,23 @@ function addLivre() {
 
 function showLivres(livresArray) {
     if (livresArray.length > 0) {
-        console.log(
-            "== id == | == ISBN == | == Titre == | == Auteur == | == Annee =="
+        // Toggle Livres Availability to Disponible / Non disponible
+        livresArray.map((livre) =>
+            livre.disponible
+                ? (livre.disponible = "Disponible")
+                : (livre.disponible = "Non disponible")
         );
-        for (let livre of livresArray) {
-            console.log(`
-${livre.id} : ${livre.isbn} - ${livre.titre} - ${livre.auteur} - ${
-                livre.annee
-            } - ${livre.disponible ? "Disponible" : "indisponible"}
-                `);
-        }
+
+        console.table(livres);
+
+        // Toggle Livres Availability to Booleans
+        livresArray.map((livre) =>
+            livre.disponible == "Disponible"
+                ? (livre.disponible = true)
+                : (livre.disponible = false)
+        );
     } else {
-        console.log("Il n'y a aucun livre pour afficher!");
+        console.log("    Il n'y a aucun livre pour afficher!");
     }
 
     // Keep the Program Running
@@ -176,26 +178,42 @@ ${livre.id} : ${livre.isbn} - ${livre.titre} - ${livre.auteur} - ${
 
 function sortLivresByTitle() {
     let choice = prompt(
-        'Taper (1) pour trier les livres "ascendant" ou taper (2) pour trier les livres "descendant": '
+        '    Taper (1) pour trier les livres "ascendant" ou taper (2) pour trier les livres "descendant": '
     );
 
-    let titles = [];
+    let sortedLivres = livres.sort((a, b) => {
+        if (a.titre < b.titre) {
+            return -1;
+        }
+        if (a.titre > b.titre) {
+            return 1;
+        }
+        return 0;
+    });
 
-    // Get titles
-    for (let livre of livres) {
-        titles.push(livre.titre);
+    if (choice == "2") {
+        sortedLivres.reverse();
+    } else if (choice != "1" && choice != "2") {
+        console.log("    Le choix n'existe pas, choisissez un autre!");
+        sortLivresByTitle();
     }
 
-    // Sort titles
-    titles.sort();
-
-    console.log(titles);
-
-    // Keep the Program Running
-    startProgram();
+    showLivres(sortedLivres);
 }
 
-function sortLivresByDate() {}
+function sortLivresByDate() {
+    let sortedLivres = livres.sort((a, b) => {
+        if (a.annee < b.annee) {
+            return -1;
+        }
+        if (a.annee > b.annee) {
+            return 1;
+        }
+        return 0;
+    });
+
+    showLivres(sortedLivres);
+}
 
 function showAvailableLivres() {
     let array = livres.filter((livre) => livre.disponible == true);
@@ -204,7 +222,7 @@ function showAvailableLivres() {
 }
 
 function searchByIsbn() {
-    let isbn = prompt("Rechercher un livre par ISBN: ");
+    let isbn = prompt("    Rechercher un livre par ISBN: ");
 
     let array = livres.filter((livre) => livre.isbn == isbn);
 
@@ -221,7 +239,7 @@ function addAbonne() {
 
     abonnes.push(abonne);
 
-    console.log("Abonne ajouté avec succès!");
+    console.log("    Abonne ajouté avec succès!");
 
     // Keep the Program Running
     startProgram();
@@ -229,14 +247,9 @@ function addAbonne() {
 
 function showAbonnes(abonneArray) {
     if (abonneArray.length > 0) {
-        console.log("== id == | == Nom == | == Prenom == | == Email");
-        for (let abonne of abonneArray) {
-            console.log(`
-${abonne.id} : ${abonne.nom} - ${abonne.prenom} - ${abonne.email}
-                `);
-        }
+        console.table(abonnes);
     } else {
-        console.log("Il n'y a aucun abonne pour afficher!");
+        console.log("    Il n'y a aucun abonne pour afficher!");
     }
 
     // Keep the Program Running
@@ -306,8 +319,8 @@ function borrowLivre() {
 function returnBook() {
     let abonneId = prompt("    Entrer l'ID du abonne: ");
 
+    // Check if The Abonne is Registered
     let abonneCheck = false;
-
     for (let abonne of abonnes) {
         if (abonne.id == abonneId) abonneCheck = true;
     }
@@ -329,7 +342,7 @@ function returnBook() {
 
                 console.log("    Le livre est retourné avec succès!");
 
-                abonneCheck = true;
+                borrowCheck = true;
 
                 break;
             }
@@ -360,7 +373,13 @@ function showBorrowedLivres() {
         for (let emprunt of emprunts) {
             if (emprunt.abonneId == abonneId) {
                 for (let emprunt of emprunts) {
-                    console.log(emprunt);
+                    console.log(
+                        `
+    Abonne ID           : ${emprunt.abonneId}
+    Livre emprunté ISBN : ${emprunt.isbn}
+    Date d'emprunt      : ${emprunt.dateEmprunt}
+                        `
+                    );
                 }
 
                 borrowCheck = true;
@@ -378,6 +397,7 @@ function showBorrowedLivres() {
     // Keep the Program Running
     startProgram();
 }
+
 // 3: Start The Program
 
 console.log(`
